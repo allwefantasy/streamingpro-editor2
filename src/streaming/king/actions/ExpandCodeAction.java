@@ -7,7 +7,15 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.ui.popup.JBPopup;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.ui.awt.RelativePoint;
+
+import javax.swing.*;
+import javax.swing.text.DefaultStyledDocument;
+import java.awt.*;
+
 
 /**
  * Created by allwefantasy on 1/4/2017.
@@ -15,6 +23,7 @@ import com.intellij.openapi.util.TextRange;
 public class ExpandCodeAction extends AnAction {
 
     Logger LOG = Logger.getInstance(ExpandCodeAction.class);
+
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -79,6 +88,7 @@ public class ExpandCodeAction extends AnAction {
     private void batch(AnActionEvent e) {
         block(e, "batch", batch_framework);
     }
+
 
     private static String batch_framework = "{\n" +
             "  \"your-name\": {\n" +

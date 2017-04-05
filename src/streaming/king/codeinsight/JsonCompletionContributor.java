@@ -5,14 +5,27 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.json.psi.JsonProperty;
 import com.intellij.json.psi.JsonStringLiteral;
 import com.intellij.json.psi.impl.JsonPropertyImpl;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
+import com.intellij.openapi.ui.popup.JBPopup;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.patterns.PatternCondition;
 import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
+import com.intellij.ui.awt.RelativePoint;
+import com.intellij.util.EventDispatcher;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.HashMap;
+import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
+import javax.swing.text.DefaultStyledDocument;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
@@ -42,6 +55,18 @@ public class JsonCompletionContributor extends CompletionContributor {
                     return ((JsonPropertyImpl) psiElement.getParent().getParent()).getName().equalsIgnoreCase("name");
                 }
             });
+
+
+    private static final PsiElementPattern.Capture<PsiElement> SQL_ELEMENT = psiElement()
+            .afterLeaf(":").
+                    withSuperParent(2, JsonProperty.class).
+                    and(psiElement().withParent(JsonStringLiteral.class)).with(new PatternCondition<PsiElement>("sql-finder") {
+                @Override
+                public boolean accepts(@NotNull PsiElement psiElement, ProcessingContext context) {
+                    return ((JsonPropertyImpl) psiElement.getParent().getParent()).getName().equalsIgnoreCase("sql");
+                }
+            });
+
 
     private static final PsiElementPattern.Capture<PsiElement> AFTER_JDBC_FORMAT_PROVIED_PROPERTY = visitNode("format", "jdbc");
     private static final PsiElementPattern.Capture<PsiElement> AFTER_CSV_FORMAT_PROVIED_PROPERTY = visitNode("format", "com.databricks.spark.csv");
@@ -90,8 +115,17 @@ public class JsonCompletionContributor extends CompletionContributor {
         extend(CompletionType.BASIC, AFTER_CSV_FORMAT_PROVIED_PROPERTY, new MyKeywordsCompletionProvider("formatParameters", 3));
 
         extend(CompletionType.BASIC, AFTER_BATCH_SCRIPT_NAME_PROVIED_PROPERTY, new MyKeywordsCompletionProvider("nameParameters", 2));
+
+        extend(CompletionType.BASIC, SQL_ELEMENT, new SQLCompletionProvider());
     }
 
+    private static class SQLCompletionProvider extends CompletionProvider<CompletionParameters> {
+
+        @Override
+        protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+
+        }
+    }
 
     private static class MyKeywordsCompletionProvider extends CompletionProvider<CompletionParameters> {
 
