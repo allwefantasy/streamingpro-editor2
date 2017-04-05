@@ -7,14 +7,8 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.ui.awt.RelativePoint;
 
-import javax.swing.*;
-import javax.swing.text.DefaultStyledDocument;
-import java.awt.*;
 
 
 /**
