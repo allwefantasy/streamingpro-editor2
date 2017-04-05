@@ -1,0 +1,40 @@
+<idea-plugin version="2">
+  <id>streaming.king</id>
+  <name>streamingpro-editor</name>
+  <version>1.0</version>
+  <vendor email="allwefantasy@gmail.com" url="https://github.com/allwefantasy"></vendor>
+
+  <description><![CDATA[
+      StreamingPro Editor
+    ]]></description>
+
+  <change-notes><![CDATA[
+
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="141.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <depends>com.intellij.modules.json</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <fileTypeFactory  implementation="streaming.king.lang.StreamingProFactory"/>
+    <completion.contributor language="JSON" order="first" implementationClass="streaming.king.codeinsight.JsonCompletionContributor"/>
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+    <action id="expand-code" class="streaming.king.actions.ExpandCodeAction" text="expandCode">
+      <add-to-group group-id="CodeCompletionGroup" anchor="last"/>
+      <keyboard-shortcut keymap="$default" first-keystroke="TAB" second-keystroke="ctrl PERIOD" replace-all=""/>
+    </action>
+  </actions>
+
+</idea-plugin>

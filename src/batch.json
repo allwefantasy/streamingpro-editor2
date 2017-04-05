@@ -1,0 +1,12 @@
+{
+  "your-name": {
+    "desc": "",
+    "strategy": "spark",
+    "algorithm": [],
+    "ref": [],
+    "compositor": [
+    ],
+    "configParams": {
+    }
+  }
+}
